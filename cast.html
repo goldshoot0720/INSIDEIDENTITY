@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cast Sheet</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; background: #12000a; color: #f6eef0; font: 14px/1.4 "Hiragino Sans", "PingFang TC", sans-serif; }
+  main { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px; }
+  figure { margin: 0; background: radial-gradient(circle at 50% 40%, #c8102e, #5a0414); border-radius: 10px; overflow: hidden; }
+  canvas { width: 100%; height: auto; display: block; }
+  figcaption { padding: 6px 10px 10px; background: #0c0006; }
+  figcaption b { font-size: 16px; }
+  .row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 0 16px 16px; }
+  @media (max-width: 700px) { main, .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<main id="sheet"></main>
+<div class="row" id="busts"></div>
+<script type="module">
+  import { GIRLS, buildCast, drawPortrait, BUST } from './js/cast.js';
+  const sheet = document.getElementById('sheet'), busts = document.getElementById('busts');
+  for (const c of buildCast()) {
+    const f = document.createElement('figure');
+    const cv = document.createElement('canvas');
+    cv.width = 1024; cv.height = 1536;
+    const x = cv.getContext('2d');
+    x.drawImage(c.body, 0, 0);
+    x.drawImage(c.arms, 0, 0);
+    f.append(cv);
+    f.insertAdjacentHTML('beforeend', `<figcaption><b>${c.rig.name}</b> ${c.rig.zh} · ${c.rig.tag}</figcaption>`);
+    sheet.append(f);
+    const b = document.createElement('figure');
+    const bc = document.createElement('canvas');
+    bc.width = BUST.w * 2; bc.height = BUST.h * 2;
+    const bx = bc.getContext('2d');
+    bx.scale(2, 2);
+    bx.translate(-BUST.x, -BUST.y);
+    drawPortrait(bx, c.girl, c.girl.face.wink ? { eyeR: 0, mouth: 0.1 } : {});
+    b.append(bc);
+    busts.append(b);
+  }
+  document.body.dataset.ready = '1';
+</script>
+</body>
+</html>

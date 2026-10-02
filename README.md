@@ -48,3 +48,14 @@ python3 tools/cutout.py && python3 tools/prep.py
 要換角色：把新的 T-pose 圖放進 `src/`，在 `tools/prep.py` 的 `CHARS` 填入關節座標（肩、肘、腕、髖、膝、踝等），然後重跑上面的指令。
 
 未附原曲音訊或歌詞，請自行載入擁有權利的音樂／影片。
+
+## PV（每首歌一支）
+
+`pv.html` 為鋒兄宇宙 9 首歌各做一支 PV：萌系標題卡（泡泡字＋搜尋列打字）、四人舞台、`.pet` 視窗特寫（會眨眼、跟著人聲開口）、撕裂四分格特寫、卡拉OK字幕與謝幕卡。開啟 <http://localhost:8765/pv.html>。
+
+```bash
+python3 tools/import-songs.py ../Effects   # 從 Effects 匯入歌曲、歌詞與節拍資料到 songs/
+node tools/render-pv.mjs                    # 逐格輸出全部 MP4 到 pv/（可指定 1–9、--from/--to、--jobs）
+```
+
+角色已改為程式繪製（`js/cast.js`，參考 INSIDE IDENTITY MV 的四人制服造型）：ミカン、シズク、モモ、ルナ；`cast.html` 可看設定圖。

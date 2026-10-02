@@ -148,12 +148,13 @@ export const ROUTINE = [
 
 export const MOVE_NAMES = Object.keys(MOVES);
 
-// beat (float, can be negative before the start) -> pose for dancer i
-export function dancePose(beat, i, only) {
+// beat (float, can be negative before the start) -> pose for dancer i;
+// `routine` lists one entry per 8-beat bar and loops
+export function dancePose(beat, i, only, routine = ROUTINE) {
   if (beat < 0) return MOVES.bounce(beat + 64, i);
   const barOf = (b) => {
     const n = Math.floor(b / 8);
-    const e = only ? { move: only } : ROUTINE[n % ROUTINE.length];
+    const e = only ? { move: only } : routine[n % routine.length];
     return { e, local: b - n * 8 };
   };
   const at = (b) => {

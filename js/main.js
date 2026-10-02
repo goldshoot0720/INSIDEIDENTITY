@@ -3,6 +3,7 @@ import { dancePose, blendPose, MOVE_NAMES } from './dance.js';
 import { Tracker, PoseMapper, sortPeople, BONES } from './pose.js';
 import { Stage, W, H } from './stage.js';
 import { T, S, chain, lerp, clamp } from './mat.js';
+import { buildCast } from './cast.js';
 
 const $ = (s) => document.querySelector(s);
 const view = $('#view');
@@ -24,15 +25,6 @@ const st = {
 const status = (msg) => { $('#status').textContent = msg; };
 
 // ---------------------------------------------------------------- loading
-function loadImg(src) {
-  return new Promise((ok, fail) => {
-    const i = new Image();
-    i.onload = () => ok(i);
-    i.onerror = () => fail(new Error('無法載入 ' + src));
-    i.src = src;
-  });
-}
-
 const glc = document.createElement('canvas');
 let renderer, puppets = [];
 const stage = new Stage();
@@ -42,9 +34,8 @@ const idleK = [0, 0, 0, 0];
 
 async function init() {
   renderer = new Renderer(glc);
-  const rig = window.RIG;
-  const imgs = await Promise.all(rig.flatMap((r) => [loadImg(r.body), loadImg(r.arms)]));
-  puppets = rig.map((r, i) => new Puppet(renderer, r, imgs[i * 2], imgs[i * 2 + 1]));
+  puppets = buildCast().map((c) => new Puppet(renderer, c.rig, c.body, c.arms));
+  const rig = puppets.map((p) => p.rig);
   await document.fonts.ready;
   stage.makeTitle(rig.map((r) => r.name));
   const sel = $('#only');
