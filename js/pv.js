@@ -801,10 +801,10 @@ export function render(t) {
   }
   if (shot.type !== 'TITLE' && shot.type !== 'END') hud(t, moe);
   if (shot.type !== 'TITLE' && shot.type !== 'STRIP') cutWipe(age, moe ? '#ffffff' : '#0a0006');
-  // film grain
-  ctx.globalAlpha = moe ? 0.035 : 0.07;
+  // film grain: a fixed texture (changing it every frame costs the encoder ~10x the bitrate)
+  ctx.globalAlpha = moe ? 0.03 : 0.06;
   ctx.globalCompositeOperation = moe ? 'multiply' : 'overlay';
-  const gr = stage.grain[Math.floor(t * FPS) % 3];
+  const gr = stage.grain[0];
   for (let y = 0; y < H; y += 256) for (let x = 0; x < W; x += 256) ctx.drawImage(gr, x, y);
   ctx.globalCompositeOperation = 'source-over';
   ctx.globalAlpha = 1;

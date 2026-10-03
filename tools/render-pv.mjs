@@ -71,7 +71,7 @@ function runJob(number) {
         outFile = path.join(outDir, `${m.file} PV${part}.mp4`);
         ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(m.fps), '-c:v', 'mjpeg', '-i', 'pipe:0',
           '-ss', String(m.from), '-t', String(m.to - m.from), '-i', path.join(ROOT, m.audio), '-map', '0:v', '-map', '1:a',
-          '-c:v', 'libx264', '-preset', 'medium', '-crf', '21', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-shortest',
+          '-c:v', 'libx264', '-preset', 'medium', '-tune', 'animation', '-crf', '23', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-shortest',
           '-movflags', '+faststart', outFile], { stdio: ['pipe', 'inherit', 'inherit'] });
         ff.on('exit', (code) => {
           cleanup();
